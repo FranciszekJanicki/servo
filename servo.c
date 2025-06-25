@@ -24,29 +24,23 @@ static servo_err_t servo_pwm_set_compare(servo_t const* servo, uint16_t compare)
                : SERVO_ERR_NULL;
 }
 
-static uint16_t servo_angle_to_compare(servo_t const* servo, float32_t angle)
+static float32_t servo_clamp_angle(servo_t const* servo, float32_t angle)
 {
-    assert(servo);
-
     if (angle > servo->config.max_angle) {
         angle = servo->config.max_angle;
     } else if (angle < servo->config.min_angle) {
         angle = servo->config.min_angle;
     }
 
-    uint16_t compare =
-        (uint16_t)((angle - servo->config.min_angle) *
-                       (float32_t)(servo->config.max_compare - servo->config.min_compare) /
-                       (servo->config.max_angle - servo->config.min_angle) +
-                   (float32_t)(servo->config.min_compare));
+    return angle;
+}
 
-    if (compare > servo->config.max_compare) {
-        compare = servo->config.max_compare;
-    } else if (compare < servo->config.min_compare) {
-        compare = servo->config.min_compare;
-    }
-
-    return compare;
+static uint16_t servo_angle_to_compare(servo_t const* servo, float32_t angle)
+{
+    return (uint16_t)((angle - servo->config.min_angle) *
+                          (float32_t)(servo->config.max_compare - servo->config.min_compare) /
+                          (servo->config.max_angle - servo->config.min_angle) +
+                      (float32_t)(servo->config.min_compare));
 }
 
 servo_err_t servo_initialize(servo_t* servo,
@@ -77,6 +71,7 @@ servo_err_t servo_set_angle(servo_t const* servo, float32_t angle)
 {
     assert(servo);
 
+    angle = servo_clamp_angle(servo, angle);
     uint16_t compare = servo_angle_to_compare(servo, angle);
 
     return servo_pwm_set_compare(servo, compare);
@@ -93,5 +88,5 @@ servo_err_t servo_set_angle_min(servo_t const* servo)
 {
     assert(servo);
 
-    return servo_set_angle(servo, (servo->config.max_angle - servo->config.min_angle) / 2.0F);
+    return servo_set_angle(servo, servo->config.min_angle);
 }
