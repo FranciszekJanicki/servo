@@ -4,10 +4,8 @@ target_sources(servo PRIVATE
     "servo.c"
 )
 
-target_include_directories(servo PUBLIC 
-)
-
-target_link_libraries(servo PRIVATE
+target_include_directories(servo PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 target_compile_options(servo PUBLIC
