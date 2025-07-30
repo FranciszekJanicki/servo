@@ -3,6 +3,10 @@
 
 #include "servo_config.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
     servo_config_t config;
     servo_interface_t interface;
@@ -16,5 +20,9 @@ servo_err_t servo_deinitialize(servo_t* servo);
 servo_err_t servo_set_angle(servo_t const* servo, float32_t angle);
 servo_err_t servo_set_angle_max(servo_t const* servo);
 servo_err_t servo_set_angle_min(servo_t const* servo);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // SERVO_SERVO_H

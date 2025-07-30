@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef float float32_t;
 
 typedef enum {
@@ -24,5 +28,9 @@ typedef struct {
     servo_err_t (*pwm_deinitialize)(void*);
     servo_err_t (*pwm_set_compare)(void*, uint16_t);
 } servo_interface_t;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // SERVO_SERVO_CONFIG_H
